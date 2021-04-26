@@ -1,5 +1,5 @@
 # PedometerEx
-Pedometer exercise(s) - There are already many examples and articles on this topic in previous years.
+Pedometer exercise(s) - There are already many examples and articles on this topic in previous years. \
 This project is the most recent with the addition of permission request.
 
 Android has provided a number of solutions for tracking step count via accelerometer.
