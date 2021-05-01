@@ -3,26 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/mainFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.ctyeung.pedometer.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
+        android:id="@+id/stepCounterFragment"
+        android:name="com.ctyeung.pedometer.StepCounterFragment"
+        android:label="fragment_step_counter"
+        tools:layout="@layout/fragment_step_counter" />
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.ctyeung.pedometer.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/stepDetectFragment"
+        android:name="com.ctyeung.pedometer.StepDetectFragment"
+        android:label="fragment_step_detect"
+        tools:layout="@layout/fragment_step_detect" />
+    <fragment
+        android:id="@+id/motionFragment"
+        android:name="com.ctyeung.pedometer.MotionFragment"
+        android:label="fragment_motion"
+        tools:layout="@layout/fragment_motion" />
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.ctyeung.pedometer.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_mainFragment_to_motionFragment"
+            app:destination="@id/motionFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_stepCounterFragment"
+            app:destination="@id/stepCounterFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_stepDetectFragment"
+            app:destination="@id/stepDetectFragment" />
     </fragment>
 </navigation>
