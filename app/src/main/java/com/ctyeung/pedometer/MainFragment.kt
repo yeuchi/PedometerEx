@@ -22,13 +22,13 @@ class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
        // return inflater.inflate(R.layout.fragment_main, container, false)
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.listener = this;
-        return binding!!.root;
+        return binding.root;
     }
 
     override fun onResume() {
@@ -37,19 +37,19 @@ class MainFragment : Fragment() {
     }
 
     private fun initButtons() {
-        var bundle = bundleOf("url" to "hello")
+        val bundle = bundleOf("url" to "hello")
 
         activity?.apply {
             findViewById<Button>(R.id.btn_motion).setOnClickListener {
-                binding!!.root.findNavController().navigate(R.id.action_mainFragment_to_motionFragment, bundle)
+                binding.root.findNavController().navigate(R.id.action_mainFragment_to_motionFragment, bundle)
             }
 
             findViewById<Button>(R.id.btn_step_count).setOnClickListener {
-                binding!!.root.findNavController().navigate(R.id.action_mainFragment_to_stepCounterFragment, bundle)
+                binding.root.findNavController().navigate(R.id.action_mainFragment_to_stepCounterFragment, bundle)
             }
 
             findViewById<Button>(R.id.btn_step_detect).setOnClickListener {
-                binding!!.root.findNavController().navigate(R.id.action_mainFragment_to_stepDetectFragment, bundle)
+                binding.root.findNavController().navigate(R.id.action_mainFragment_to_stepDetectFragment, bundle)
             }
         }
     }
