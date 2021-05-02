@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.ctyeung.pedometer.databinding.FragmentStepCounterBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_step_counter.*
 
 
 /*
@@ -74,23 +75,43 @@ class StepCounterFragment : Fragment(), SensorEventListener {
     private fun initButtons() {
         (activity as MainActivity).apply {
 
+            // initial
+            btn_clear.isEnabled = false
+            btn_pause.isEnabled = false
+            btn_stop.isEnabled = false
+            btn_play.isEnabled = true
+
             findViewById<FloatingActionButton>(R.id.btn_play).setOnClickListener { view ->
                 startSensor(Sensor.TYPE_STEP_COUNTER, sensorListener)
                 currentState = State.ACTIVE
                 binding.txtState.text = "Active"
 
+                btn_pause.isEnabled = true
+                btn_clear.isEnabled = false
+                btn_play.isEnabled = false
+                btn_stop.isEnabled = true
             }
 
             findViewById<FloatingActionButton>(R.id.btn_pause).setOnClickListener { view ->
                 (activity as MainActivity).stopSensor(sensorListener)
                 currentState = State.PAUSED
                 binding.txtState.text = "Paused"
+
+                btn_clear.isEnabled = false
+                btn_pause.isEnabled = false
+                btn_stop.isEnabled = true
+                btn_play.isEnabled = true
             }
 
             findViewById<FloatingActionButton>(R.id.btn_stop).setOnClickListener { view ->
                 (activity as MainActivity).stopSensor(sensorListener)
                 currentState = State.STOPPED
                 binding.txtState.text = "Stopped"
+
+                btn_clear.isEnabled = true
+                btn_pause.isEnabled = false
+                btn_stop.isEnabled = false
+                btn_play.isEnabled = true
             }
 
             findViewById<FloatingActionButton>(R.id.btn_clear).setOnClickListener { view ->
@@ -99,6 +120,11 @@ class StepCounterFragment : Fragment(), SensorEventListener {
                 binding.txtState.text = "Cleared"
                 steps = 0
                 binding.txtSteps.text = "Steps: ${steps}"
+
+                btn_clear.isEnabled = false
+                btn_pause.isEnabled = false
+                btn_stop.isEnabled = false
+                btn_play.isEnabled = true
             }
         }
     }
