@@ -1,57 +1,86 @@
 package com.ctyeung.pedometer
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import com.ctyeung.pedometer.databinding.FragmentStepDetectBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_step_counter.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class StepDetectFragment : Fragment(), SensorEventListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [StepDetectFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class StepDetectFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding : FragmentStepDetectBinding
+    private val sensorListener: SensorEventListener = this
+    private var currentState = State.STOPPED
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        (activity as MainActivity).requestPermission()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_step_detect, container, false)
+        //return inflater.inflate(R.layout.fragment_step_detect, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_step_detect, container, false)
+        binding.listener = this;
+        return binding.root;
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StepDetectFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-                StepDetectFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    override fun onResume() {
+        super.onResume()
+        initButtons()
     }
+
+    private fun initButtons() {
+        (activity as MainActivity).apply {
+
+            // initial
+            btn_stop.isEnabled = false
+            btn_play.isEnabled = true
+
+            findViewById<FloatingActionButton>(R.id.btn_play).setOnClickListener { view ->
+                startSensor(Sensor.TYPE_MOTION_DETECT, sensorListener)
+                currentState = State.ACTIVE
+                binding.txtState.text = "Active"
+
+                btn_play.isEnabled = false
+                btn_stop.isEnabled = true
+            }
+
+            findViewById<FloatingActionButton>(R.id.btn_stop).setOnClickListener { view ->
+                (activity as MainActivity).stopSensor(sensorListener)
+                currentState = State.STOPPED
+                binding.txtState.text = "Stopped"
+
+                btn_stop.isEnabled = false
+                btn_play.isEnabled = true
+            }
+        }
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        when (currentState) {
+            State.ACTIVE -> {
+                binding.txtState.text = "Detected!!"
+            }
+
+            State.STOPPED -> {
+                // nothing is happening
+                binding.txtState.text = "Stationed"
+            }
+            else -> {
+                // do nothing !
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 }

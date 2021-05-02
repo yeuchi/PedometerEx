@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+
     var isPermitted: Boolean = false
     private var requestcode = 1000
     private var sensorManager: SensorManager? = null
@@ -55,6 +56,10 @@ class MainActivity : AppCompatActivity() {
                     arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
                     requestcode
                 )
+            } else {
+                val baseView = findViewById(R.id.baseView) as View
+                Snackbar.make(baseView, "Permission", Snackbar.LENGTH_LONG)
+                    .setAction("Already Granted", null).show()
             }
         }
     }
@@ -76,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun startSensor(sensorType:Int, listener: SensorEventListener) {
+    fun startSensor(sensorType: Int, listener: SensorEventListener) {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         sensor = sensorManager?.getDefaultSensor(sensorType)
         sensorManager?.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_NORMAL)

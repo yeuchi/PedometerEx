@@ -36,13 +36,6 @@ import kotlinx.android.synthetic.main.fragment_step_counter.*
 
 class StepCounterFragment : Fragment(), SensorEventListener {
 
-    private enum class State {
-        PAUSED,
-        ACTIVE,
-        STOPPED,
-        CLEARED
-    }
-
     private var steps: Long = 0
     private var currentState = State.STOPPED
     private lateinit var binding: FragmentStepCounterBinding
