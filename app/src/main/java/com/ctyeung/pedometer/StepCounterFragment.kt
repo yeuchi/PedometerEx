@@ -45,7 +45,8 @@ class StepCounterFragment : Fragment(), SensorEventListener {
     private var steps: Long = 0
     private var currentState = State.STOPPED
     private lateinit var binding: FragmentStepCounterBinding
-    private val sensorListener:SensorEventListener = this
+    private val sensorListener: SensorEventListener = this
+    private var initialCount: Long = 0L
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,13 +57,13 @@ class StepCounterFragment : Fragment(), SensorEventListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_step_counter, container, false)
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_step_counter, container, false)
         binding.listener = this;
-        return binding!!.root;
+        return binding.root;
     }
 
     override fun onResume() {
@@ -75,26 +76,26 @@ class StepCounterFragment : Fragment(), SensorEventListener {
 
             findViewById<FloatingActionButton>(R.id.btn_play).setOnClickListener { view ->
                 startSensor(Sensor.TYPE_STEP_COUNTER, sensorListener)
-                currentState = StepCounterFragment.State.ACTIVE
+                currentState = State.ACTIVE
                 binding.txtState.text = "Active"
 
             }
 
             findViewById<FloatingActionButton>(R.id.btn_pause).setOnClickListener { view ->
                 (activity as MainActivity).stopSensor(sensorListener)
-                currentState = StepCounterFragment.State.PAUSED
+                currentState = State.PAUSED
                 binding.txtState.text = "Paused"
             }
 
             findViewById<FloatingActionButton>(R.id.btn_stop).setOnClickListener { view ->
                 (activity as MainActivity).stopSensor(sensorListener)
-                currentState = StepCounterFragment.State.STOPPED
+                currentState = State.STOPPED
                 binding.txtState.text = "Stopped"
             }
 
             findViewById<FloatingActionButton>(R.id.btn_clear).setOnClickListener { view ->
                 (activity as MainActivity).stopSensor(sensorListener)
-                currentState = StepCounterFragment.State.CLEARED
+                currentState = State.CLEARED
                 binding.txtState.text = "Cleared"
                 steps = 0
                 binding.txtSteps.text = "Steps: ${steps}"
@@ -104,12 +105,18 @@ class StepCounterFragment : Fragment(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent?) {
         when (currentState) {
-            StepCounterFragment.State.ACTIVE -> {
-                steps = event?.values?.get(0)?.toLong() ?: 0
+            State.ACTIVE -> {
+                if (0L==initialCount) {
+                    initialCount = event?.values?.get(0)?.toLong() ?: 0
+                }
+
+                steps = (event?.values?.get(0)?.toLong() ?: 0) - initialCount
                 binding.txtSteps.text = "Steps: ${steps}"
             }
-            StepCounterFragment.State.CLEARED -> {
-                steps = 0
+
+            State.CLEARED -> {
+                initialCount = 0L
+                steps = 0L
                 binding.txtSteps.text = "Steps: ${steps}"
             }
             else -> {
