@@ -36,11 +36,15 @@ import kotlinx.android.synthetic.main.fragment_step_counter.*
 
 class StepCounterFragment : Fragment(), SensorEventListener {
 
+    /*
+     * NOTE for next improvement
+     * To preserve the battery on devices running your app, you should use the JobScheduler class to retrieve the current value from the step counter sensor at a specific interval. Although different types of apps require different sensor-reading intervals, you should make this interval as long as possible unless your app requires real-time data from the sensor.
+     */
     private var steps: Long = 0
     private var currentState = State.STOPPED
     private lateinit var binding: FragmentStepCounterBinding
     private val sensorListener: SensorEventListener = this
-    private var initialCount: Long = 0L
+    private var initialCount: Long = 0L // since last reboot
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

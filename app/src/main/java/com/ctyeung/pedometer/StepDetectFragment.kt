@@ -67,6 +67,10 @@ class StepDetectFragment : Fragment(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
+        /*
+         * From docs - expect a value of 1 returned
+         * https://developer.android.com/reference/android/hardware/Sensor#TYPE_STEP_DETECTOR
+         */
         when (currentState) {
             State.ACTIVE -> {
                 binding.txtState.text = "Detected!!"
